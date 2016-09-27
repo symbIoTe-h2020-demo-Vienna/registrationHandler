@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by jose on 26/09/16.
  */
-public interface PlarformInfoReader {
+public interface PlatformInfoReader {
 
     PlatformBean getPlatformInformation();
     List<ResourceBean> getResourcesToRegister();

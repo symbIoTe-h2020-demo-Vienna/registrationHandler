@@ -11,6 +11,7 @@ public class RegistrationHandlerApplicationTests {
 
 	@Test
 	public void contextLoads() {
+		assert true;
 	}
 
 }

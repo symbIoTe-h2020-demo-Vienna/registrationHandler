@@ -32,7 +32,7 @@ dependencies {
 	compile('org.springframework.cloud:spring-cloud-starter-feign')
 	compile('org.springframework.cloud:spring-cloud-starter-stream-rabbit')
 	compile('org.springframework.boot:spring-boot-starter-data-mongodb')
-	compile('com.netflix.feign:feign-gson')
+	compile('com.netflix.feign:feign-gson:8.18.0')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 

@@ -4,6 +4,7 @@ import eu.h2020.symbiote.beans.PlatformBean;
 import eu.h2020.symbiote.beans.ResourceBean;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -22,7 +23,7 @@ import feign.gson.GsonEncoder;
 public class PlatformInformationReader implements CommandLineRunner {
 
     @Autowired
-    private PlarformInfoReader platformReader;
+    private PlatformInfoReader platformReader;
 
 
     @Value("${symbiote.core.endpoint}")
@@ -36,14 +37,16 @@ public class PlatformInformationReader implements CommandLineRunner {
         List<ResourceBean> resourcesInfo = platformReader.getResourcesToRegister();
 
 
-        CoreRegistryClient coreClient = Feign.builder().
-                encoder(new GsonEncoder()).decoder(new GsonDecoder()).
-                target(CoreRegistryClient.class,coreUrl);
+        if (platformInfo != null) {
+            CoreRegistryClient coreClient = Feign.builder().
+                    encoder(new GsonEncoder()).decoder(new GsonDecoder()).
+                    target(CoreRegistryClient.class, coreUrl);
 
-        String platformId = coreClient.registerPlatform(platformInfo);
-        if (platformId != null) {
-            for (ResourceBean resource : resourcesInfo) {
-                coreClient.registerResource(platformId,resource);
+            String platformId = coreClient.registerPlatform(platformInfo);
+            if (platformId != null) {
+                for (ResourceBean resource : resourcesInfo) {
+                    coreClient.registerResource(platformId, resource);
+                }
             }
         }
 
