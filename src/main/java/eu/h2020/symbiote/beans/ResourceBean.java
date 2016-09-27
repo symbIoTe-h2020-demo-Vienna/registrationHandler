@@ -3,21 +3,12 @@ package eu.h2020.symbiote.beans;
 /**
  * Created by jose on 26/09/16.
  */
-public class ResourceBean {
+public class ResourceBean extends NameIdBean{
 
-    private String name;
     private String owner;
     private String description;
     private LocationBean location;
     private String observedProperty;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getOwner() {
         return owner;
