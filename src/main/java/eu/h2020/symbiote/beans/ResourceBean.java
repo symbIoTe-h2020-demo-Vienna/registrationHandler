@@ -9,6 +9,7 @@ public class ResourceBean extends NameIdBean{
     private String description;
     private LocationBean location;
     private String observedProperty;
+    private String resourceId;
 
     public String getOwner() {
         return owner;
@@ -40,5 +41,13 @@ public class ResourceBean extends NameIdBean{
 
     public void setObservedProperty(String observedProperty) {
         this.observedProperty = observedProperty;
+    }
+
+    public String getResourceId() {
+        return resourceId;
+    }
+
+    public void setResourceId(String resourceId) {
+        this.resourceId = resourceId;
     }
 }

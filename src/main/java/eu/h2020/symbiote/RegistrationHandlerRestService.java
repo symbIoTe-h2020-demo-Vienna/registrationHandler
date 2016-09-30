@@ -8,10 +8,13 @@ import eu.h2020.symbiote.exceptions.NotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -73,16 +76,64 @@ public class RegistrationHandlerRestService {
     public PlatformBean updatePlatformInfo(PlatformBean platform) {
         try {
             PlatformBean existing = getPlatformInfo();
-            platform.setId(existing.getId());
+            platform.setInternalId(existing.getInternalId());
             return platformRepository.save(platform);
         } catch (NotFoundException e) {
             return platformRepository.save(platform);
         }
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/platform")
-    public String publishPlatform() throws NotFoundException {
+    @RequestMapping(method = RequestMethod.POST, path = "/platform/publish")
+    public PlatformBean publishPlatform() throws NotFoundException {
         PlatformBean platform = getPlatformInfo();
-        return coreClient.registerPlatform(platform);
+        String symbioteId = coreClient.registerPlatform(platform);
+        platform.setSymbioteId(symbioteId);
+        return platformRepository.save(platform);
     }
+
+    private ResourceBean doPublishResource(String platformId, String resourceId) {
+        ResourceBean resource = resourceRepository.findOne(resourceId);
+        if (resource != null) {
+            ArrayList<ResourceBean> toRegister = new ArrayList<>();
+            toRegister.add(resource);
+            List<ResourceBean> registered = coreClient.registerResource(platformId,toRegister);
+            if (registered != null && registered.size() > 0) {
+                ResourceBean result = registered.get(0);
+
+                resource.setSymbioteId(result.getId());
+
+                return resourceRepository.save(resource);
+            }
+        }
+
+        return null;
+    }
+
+    @RequestMapping(method = RequestMethod.POST, path = "/resource/publish/{resourceId}")
+    public ResourceBean publishResource(@PathVariable String resourceId) throws NotFoundException {
+        PlatformBean platform = getPlatformInfo();
+        if (platform.getSymbioteId() != null) {
+            return doPublishResource(platform.getSymbioteId(), resourceId);
+        } else {
+            return null;
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.POST, path = "/resource/publishAll",
+            consumes = "application/json")
+    public List<ResourceBean> publishResources(@RequestBody List<String> resourceIds)
+            throws NotFoundException {
+
+        List<ResourceBean> result = new ArrayList<>();
+        if (resourceIds != null) {
+            for (String resourceId : resourceIds) {
+                ResourceBean registerResult = publishResource(resourceId);
+                if (registerResult != null) {
+                    result.add(registerResult);
+                }
+            }
+        }
+        return result;
+    }
+
 }

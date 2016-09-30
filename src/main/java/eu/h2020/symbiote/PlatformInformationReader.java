@@ -39,7 +39,7 @@ public class PlatformInformationReader implements CommandLineRunner {
         T found = repo.findByName(bean.getName());
         if (found != null) {
             logger.info("Updating element "+bean.getName());
-            bean.setId(found.getId());
+            bean.setInternalId(found.getInternalId());
         }
         logger.info("Saving element "+bean.getName());
         return repo.save(bean);
