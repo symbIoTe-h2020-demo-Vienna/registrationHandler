@@ -1,5 +1,8 @@
 package eu.h2020.symbiote.beans;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by jose on 26/09/16.
  */
@@ -8,8 +11,8 @@ public class ResourceBean extends NameIdBean{
     private String owner;
     private String description;
     private LocationBean location;
-    private String observedProperty;
-    private String resourceId;
+    private List<String> observedProperties = new ArrayList<String>();
+    private String resourceURL;
 
     public String getOwner() {
         return owner;
@@ -35,19 +38,23 @@ public class ResourceBean extends NameIdBean{
         this.location = location;
     }
 
-    public String getObservedProperty() {
-        return observedProperty;
+    public List<String> getObservedProperties() {
+        return observedProperties;
     }
 
-    public void setObservedProperty(String observedProperty) {
-        this.observedProperty = observedProperty;
+    public void setObservedProperties(List<String> observedProperties) {
+        this.observedProperties = observedProperties;
     }
 
-    public String getResourceId() {
-        return resourceId;
+    public String getResourceURL() {
+        return resourceURL;
     }
 
-    public void setResourceId(String resourceId) {
-        this.resourceId = resourceId;
+    public void setResourceURL(String resourceURL) {
+        this.resourceURL = resourceURL;
+    }
+
+    public void addObservedProperty(String property) {
+      observedProperties.add(property);
     }
 }

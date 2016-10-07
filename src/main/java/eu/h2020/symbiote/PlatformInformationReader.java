@@ -1,20 +1,21 @@
 package eu.h2020.symbiote;
 
-import eu.h2020.symbiote.beans.NameIdBean;
 import eu.h2020.symbiote.beans.PlatformBean;
 import eu.h2020.symbiote.beans.ResourceBean;
-import eu.h2020.symbiote.db.NameIdRepository;
-import eu.h2020.symbiote.db.PlatformRepository;
-import eu.h2020.symbiote.db.ResourceRepository;
+import eu.h2020.symbiote.exceptions.PlatformInfoReaderFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.annotation.PostConstruct;
 
 /**
  * Created by jose on 26/09/16.
@@ -23,48 +24,49 @@ import java.util.List;
 @Component
 public class PlatformInformationReader implements CommandLineRunner {
 
-    private static final Log logger = LogFactory.getLog(PlatformInformationReader.class);
+  private static final Log logger = LogFactory.getLog(PlatformInformationReader.class);
 
-    @Autowired
-    private PlatformInfoReader platformReader;
+  @Value("${reghandler.reader.impl}")
+  private String readerImplementation;
 
-    @Autowired
-    private PlatformRepository platformRepository;
+  @Value("${reghandler.init.autoregister}")
+  private boolean autoRegister;
 
-    @Autowired
-    private ResourceRepository resourceRepository;
+  @Autowired
+  private PlatformInfoReaderFactory platformReaderFactory;
 
-    private <T extends NameIdBean> T insertOrUpdate(NameIdRepository<T> repo, T bean) {
+  @Autowired
+  private PlatformInformationManager platformManager;
 
-        T found = repo.findByName(bean.getName());
-        if (found != null) {
-            logger.info("Updating element "+bean.getName());
-            bean.setInternalId(found.getInternalId());
-        }
-        logger.info("Saving element "+bean.getName());
-        return repo.save(bean);
+  private PlatformInfoReader platformReader;
 
+  @PostConstruct
+  private void init() {
+    platformReader = platformReaderFactory.getPlatformInfoReader(readerImplementation);
+  }
+
+  @Override
+  public void run(String... args) throws Exception {
+
+    PlatformBean platformInfo = platformReader.getPlatformInformation();
+    List<ResourceBean> resourcesInfo = platformReader.getResourcesToRegister();
+
+    if (platformInfo != null) {
+      platformManager.updatePlatformInfo(platformInfo);
     }
 
-    private <T extends NameIdBean> List<T> insertOrUpdate(NameIdRepository<T> repo,
-                                                          Iterable<T> beans) {
-        List<T> result = new ArrayList<T>();
-        beans.forEach(bean -> result.add(insertOrUpdate(repo, bean)));
-        return result;
+    List<ResourceBean> updatedResources = new ArrayList<>();
+
+    if (resourcesInfo != null) {
+      updatedResources = platformManager.addOrUpdateResources(resourcesInfo);
     }
 
-    @Override
-    public void run(String... args) throws Exception {
-
-        PlatformBean platformInfo = platformReader.getPlatformInformation();
-        List<ResourceBean> resourcesInfo = platformReader.getResourcesToRegister();
-
-
-        if (platformInfo != null) {
-           insertOrUpdate(platformRepository, platformInfo);
-        }
-
-        insertOrUpdate(resourceRepository, resourcesInfo);
-
+    if (autoRegister) {
+      platformManager.registerPlatform();
+      platformManager.registerResources(updatedResources.stream().map(
+          resource -> resource.getInternalId()
+      ).collect(Collectors.toList()));
     }
+
+  }
 }

@@ -1,0 +1,28 @@
+version 'unspecified'
+
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+
+sourceCompatibility = 1.5
+
+repositories {
+    mavenCentral()
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId 'eu.h2020.symbiote'
+            artifactId 'registration-handler-interface'
+            version '1.0-SNAPSHOT'
+
+            from components.java
+        }
+    }
+}
+
+dependencies {
+    compileOnly('com.google.code.gson:gson:2.7')
+    compileOnly('org.springframework.data:spring-data-commons-core:1.4.1.RELEASE')
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
