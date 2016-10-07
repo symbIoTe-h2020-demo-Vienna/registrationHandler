@@ -1,0 +1,48 @@
+version '1.0'
+
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+sourceCompatibility = 1.7
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    flatDir {
+        dirs 'lib'
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId 'eu.h2020.symbiote'
+            artifactId 'open-iot-registration-handler-impl'
+            version '1.0-SNAPSHOT'
+
+            from components.java
+        }
+    }
+}
+
+configurations {
+    localLib
+    compileOnly.extendsFrom localLib
+}
+
+jar {
+
+    from {
+        configurations.localLib.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+}
+
+dependencies {
+    localLib name: 'virt_jena3'
+    localLib name: 'virtjdbc4'
+    compile('org.apache.jena:jena-arq:3.1.0')
+    compileOnly('eu.h2020.symbiote:registration-handler-interface:1.0-SNAPSHOT')
+    compileOnly('org.springframework:spring-context:4.3.3.RELEASE')
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
