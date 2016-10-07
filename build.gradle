@@ -36,7 +36,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-data-mongodb')
 	compile('com.netflix.feign:feign-gson:8.18.0')
 	compile project(':registration-handler-interface')
-	compile(':open-iot-registration-handler-impl')
+	compile project(':open-iot-registration-handler-impl')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 
