@@ -19,26 +19,13 @@ public class NetworkPlatformInfoReader implements PlatformInfoReader {
   @Value("${symbiote.openuwedat.location}")
   private String openUwedatLocation;
 
-  private class ResourcesWrapper {
-
-    private List<ResourceBean> resources;
-
-    public List<ResourceBean> getResources() {
-      return resources;
-    }
-
-    public void setResources(List<ResourceBean> resources) {
-      this.resources = resources;
-    }
-  }
-
   private interface RemoteFileClient {
 
     @RequestLine("GET /system.json")
     PlatformBean getPlatformInformation();
 
     @RequestLine("GET /resources.json")
-    ResourcesWrapper getResources();
+    List<ResourceBean> getResources();
 
   }
 
@@ -54,6 +41,6 @@ public class NetworkPlatformInfoReader implements PlatformInfoReader {
 
   @Override
   public List<ResourceBean> getResourcesToRegister() {
-    return getClient().getResources().getResources();
+    return getClient().getResources();
   }
 }
