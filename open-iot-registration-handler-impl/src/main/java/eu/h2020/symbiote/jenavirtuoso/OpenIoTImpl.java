@@ -48,6 +48,7 @@ public class OpenIoTImpl implements PlatformInfoReader {
         PlatformBean instance = new PlatformBean();
         instance.setOwner("UNIZG-FER");
         instance.setType("OpenIoT");
+        instance.setName("OpenIoT");
         instance.setResourceAccessProxyUrl(rapUrl);
 
         return instance;
@@ -128,6 +129,7 @@ public class OpenIoTImpl implements PlatformInfoReader {
                         sensor.addObservedProperty(obsProp.toString().substring(obsProp.toString().lastIndexOf("/") + 1));
                     }
 
+                    sensor.setName(sensorId.toString().substring(sensorId.toString().lastIndexOf("/") + 1));
                     sensor.setResourceURL(rapUrl+"/Sensors('"+sensorId.toString().substring(sensorId.toString().lastIndexOf("/") + 1)+"')");
 
                     sensorCollection.put(sensorId.toString(), sensor);
