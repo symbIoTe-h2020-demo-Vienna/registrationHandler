@@ -42,7 +42,7 @@ dependencies {
     localLib name: 'virt_jena3'
     localLib name: 'virtjdbc4'
     compile('org.apache.jena:jena-arq:3.1.0')
-    compileOnly('eu.h2020.symbiote:registration-handler-interface:1.0-SNAPSHOT')
+    compileOnly project(':registration-handler-interface')
     compileOnly('org.springframework:spring-context:4.3.3.RELEASE')
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }

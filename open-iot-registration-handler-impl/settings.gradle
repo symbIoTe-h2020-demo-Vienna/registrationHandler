@@ -1,0 +1,2 @@
+include ':registration-handler-interface'
+project(':registration-handler-interface').projectDir = new File(settingsDir, '../registration-handler-interface')
