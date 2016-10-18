@@ -160,3 +160,17 @@ Several properties are used to configure the Registration Handler and its backen
 
 ### OpenUwedat (reghandler.reader.impl=networkPlatformInfoReader)
 OpenUwedat is using the default network reader backend for the demo but it might change in the future.
+
+## Packaging
+Packaging on Spring Boot is extremely easy but this project depends on Gradle. As such, it should be installed in the machine that wants to build a runnable jar. Instructions to do so are at https://gradle.org/gradle-download/
+
+Once Gradle is installed and running, getting a runnable jar compromises just personalizing the `src/main/resources/application.properties` file and running gradle clean build jar.
+
+## Running
+To run, it needs a MongoDB database running in the local host with the default configuration. Instructions to do so are at https://www.mongodb.com/download-center
+
+Once the jar is generated and the database is running, the Registration Handler can be run by the command `java -jar <name_of_the_jar_file.jar>` 
+
+The REST interface will be accessible at `http://localhost:8080` but the port can be configured by modifying the property `server.port` inside the `application.properties` file. 
+
+
