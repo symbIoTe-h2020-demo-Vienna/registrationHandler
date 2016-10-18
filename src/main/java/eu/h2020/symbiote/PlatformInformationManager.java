@@ -46,12 +46,17 @@ public class PlatformInformationManager {
 
     if (platformInfo != null) {
       List<PlatformBean> platforms = platformRepository.findAll();
+      String symbioteId = null;
       if (platforms != null) {
         for (PlatformBean platform : platforms) {
+          if (platform.getSymbioteId() != null) {
+            symbioteId = platform.getSymbioteId();
+          }
           platformRepository.delete(platform);
         }
       }
 
+      platformInfo.setSymbioteId(symbioteId);
       return platformRepository.save(platformInfo);
     }
 

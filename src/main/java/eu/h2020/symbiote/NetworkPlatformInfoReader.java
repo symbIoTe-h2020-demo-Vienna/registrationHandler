@@ -13,11 +13,11 @@ import java.util.List;
 /**
  * Created by jose on 7/10/16.
  */
-@Component("openUwedatPlatformInfoReader")
+@Component("networkPlatformInfoReader")
 public class NetworkPlatformInfoReader implements PlatformInfoReader {
 
-  @Value("${symbiote.openuwedat.location}")
-  private String openUwedatLocation;
+  @Value("${symbiote.network.information.location}")
+  private String remoteLocation;
 
   private interface RemoteFileClient {
 
@@ -31,7 +31,7 @@ public class NetworkPlatformInfoReader implements PlatformInfoReader {
 
   private RemoteFileClient getClient() {
     return RegistrationHandlerApplication.
-        createFeignClient(RemoteFileClient.class, openUwedatLocation);
+        createFeignClient(RemoteFileClient.class, remoteLocation);
   }
 
   @Override

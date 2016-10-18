@@ -34,17 +34,17 @@ public class RegistrationHandlerRestService {
   }
 
   @RequestMapping(method = RequestMethod.POST, path = "/resource")
-  public ResourceBean addResources(ResourceBean resource) {
+  public ResourceBean addResources(@RequestBody ResourceBean resource) {
     return infoManager.addOrUpdateResource(resource);
   }
 
   @RequestMapping(method = RequestMethod.PUT, path = "/resource")
-  public ResourceBean updateResources(ResourceBean resource) {
+  public ResourceBean updateResources(@RequestBody ResourceBean resource) {
     return infoManager.addOrUpdateResource(resource);
   }
 
   @RequestMapping(method = RequestMethod.PUT, path = "/platform")
-  public PlatformBean updatePlatformInfo(PlatformBean platform) {
+  public PlatformBean updatePlatformInfo(@RequestBody PlatformBean platform) {
     return infoManager.updatePlatformInfo(platform);
   }
 
