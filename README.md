@@ -1,3 +1,7 @@
+[![Build Status](https://api.travis-ci.org/symbiote-h2020/registrationHandler.svg?branch=staging)](https://api.travis-ci.org/symbiote-h2020/registrationHandler)
+[![codecov.io](https://codecov.io/github/symbiote-h2020/registrationHandler/branch/staging/graph/badge.svg)](https://codecov.io/github/symbiote-h2020/registrationHandler)
+
+
 # SymbIoTe Registration Handler Component
 
 This project is part of the Interworking API for SymbIoTe H2020 project. It's main aim is to get resource data from different platforms and allow the registration of this resources into an instance of SymbIoTe Core.
